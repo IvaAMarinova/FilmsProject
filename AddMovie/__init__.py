@@ -5,7 +5,6 @@ import json
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy.orm import sessionmaker
 
-# Database setup
 DATABASE_URL = f"mysql+mysqlconnector://{os.getenv('DB_USER')}:" \
                f"{os.getenv('DB_PASS')}@{os.getenv('DB_HOST')}/" \
                f"{os.getenv('DB_NAME')}?ssl_mode={os.getenv('DB_SSL_MODE')}"
@@ -26,7 +25,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     
     try:
-        # Parse the request body
         req_body = req.get_json()
         title = req_body.get('title')
         year = req_body.get('year')
@@ -36,7 +34,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if not all([title, year, genre, description]):
             raise ValueError("Please provide all movie details (title, year, genre, description)")
 
-        # Insert movie data using SQLAlchemy
         new_movie = movies.insert().values(title=title, year=year, genre=genre, description=description)
         session.execute(new_movie)
         session.commit()
